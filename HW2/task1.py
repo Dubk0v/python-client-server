@@ -49,7 +49,7 @@ def get_data(files):
 
 def write_to_csv(write_to_file, read_from_files):
     data, encoding = get_data(read_from_files)
-    with open(write_to_file, 'w', encoding=encoding) as f_n:
+    with open(write_to_file, 'w', encoding='UTF-8') as f_n:
         f_n_writer = csv.writer(f_n)
         for row in data:
             f_n_writer.writerow(row)
