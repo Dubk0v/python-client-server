@@ -28,4 +28,4 @@ def data_to_yaml(first, second, third):
 
 
 if __name__ == '__main__':
-    data_to_yaml([1, 2, 3], 19, {'1': 1, 'two': 'Two', 'Три': 'Три 3 3'})
+    data_to_yaml([1, 2, 3], 19, {'1': 1, 'two': 'Two', 'Три': 'Три 3 €'})
