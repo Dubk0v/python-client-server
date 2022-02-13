@@ -16,7 +16,7 @@ def write_order_to_json(item=None, quantity=None, price=None, buyer=None, date=N
         'buyer': buyer,
         'date': date,
     }
-    with open('orders.json', 'w') as f_n:
+    with open('orders.json', 'w', encoding='utf-8') as f_n:
 
         json.dump({"orders": [dict_to_json]}, f_n, indent=4)
 
