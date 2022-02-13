@@ -16,13 +16,13 @@ def data_to_yaml(first, second, third):
         '3Ж': third,
     }
 
-    with open('file.yaml', 'w') as f_n:
+    with open('file.yaml', 'w', encoding='utf-8') as f_n:
         yaml.dump(data_yaml, f_n, default_flow_style=False, allow_unicode=True)
 
-    with open('file.yaml') as f_n:
+    with open('file.yaml', encoding='utf-8') as f_n:
         print(f_n.read())
 
-    with open('file.yaml') as f_n:
+    with open('file.yaml', encoding='utf-8') as f_n:
         f_n_content = yaml.load(f_n, Loader=yaml.SafeLoader)
         print(f'Данные совпадают? {data_yaml == f_n_content}')
 
