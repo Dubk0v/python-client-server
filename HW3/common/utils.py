@@ -1,7 +1,7 @@
 """Утилиты"""
 
 from json import dumps, loads
-from variables import MAX_PACKAGE_LENGTH, ENCODING
+from .variables import MAX_PACKAGE_LENGTH, ENCODING
 
 def send_msg(sock, msg):
     js_msg = dumps(msg)
