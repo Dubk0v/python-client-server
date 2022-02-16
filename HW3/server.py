@@ -12,9 +12,9 @@ from socket import socket, AF_INET, SOCK_STREAM
 from common.utils import send_msg, get_msg
 from json import JSONDecodeError
 
-def process_client_message(message):
-    if ACTION in message and message[ACTION] == PRESENCE and TIME in message \
-            and USER in message and message[USER][ACCOUNT_NAME] == 'Guest':
+def process_client_msg(msg):
+    if ACTION in msg and msg[ACTION] == PRESENCE and TIME in msg \
+            and USER in msg and msg[USER][ACCOUNT_NAME] == 'Guest':
         return {RESPONSE: 200}
     return {
         RESPONDEFAULT_IP_ADDRESSSE: 400,
@@ -54,9 +54,9 @@ def main():
     while True:
         client, client_address = transport.accept()
         try:
-            message_from_client = get_msg(client)
-            print(message_from_client)
-            response = process_client_message(message_from_client)
+            msg_from_client = get_msg(client)
+            print(msg_from_client)
+            response = process_client_msg(msg_from_client)
             send_msg(client, response)
             client.close()
         except (ValueError, JSONDecodeError):

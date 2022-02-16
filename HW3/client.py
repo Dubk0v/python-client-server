@@ -25,11 +25,11 @@ def create_presence(account_name='Guest'):
     return out
 
 
-def process_ans(message):
-    if RESPONSE in message:
-        if message[RESPONSE] == 200:
+def process_ans(msg):
+    if RESPONSE in msg:
+        if msg[RESPONSE] == 200:
             return '200 : OK'
-        return f'400 : {message[ERROR]}'
+        return f'400 : {msg[ERROR]}'
     raise ValueError
 
 
@@ -46,8 +46,8 @@ def main():
 
     transport = socket(AF_INET, SOCK_STREAM)
     transport.connect((server_address, server_port))
-    message_to_server = create_presence()
-    send_msg(transport, message_to_server)
+    msg_to_server = create_presence()
+    send_msg(transport, msg_to_server)
     try:
         answer = process_ans(get_msg(transport))
         print(answer)
