@@ -2,15 +2,15 @@ import sys
 import os
 import unittest
 import json
-# sys.path.append('../')  #'../']
+sys.path.append('../')  #'../']
 # sys.path.append(os.path.join(os.getcwd(), '..'))  #'/Users/Dubkov/Desktop/Greekbrains/python/python-client-server/HW3/unit_tests/..']
 # почему отрабатывает не как на видео?
-
+# sys.path.insert(0, os.path.join(os.getcwd(), '..'))
 # from pprint import pprint
 # pprint(sys.path)
 
-from HW3.common.utils import *
-from HW3.common.variables import *
+from common.utils import *
+from common.variables import *
 
 class TestSocket:
     def __init__(self, test_dict):
