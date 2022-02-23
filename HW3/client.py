@@ -5,13 +5,16 @@
 port — tcp-порт на сервере, по умолчанию 7777.
 """
 
-from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, \
-    RESPONSE, ERROR, DEFAULT_IP_ADDRESS, DEFAULT_PORT
+from common.variables import *
 from time import time
 from sys import argv
 from socket import socket, AF_INET, SOCK_STREAM
 from common.utils import send_msg, get_msg
 from json import JSONDecodeError
+import logging
+import log.client_log_config
+
+CLIENT_LOGGER = logging.getLogger('client')
 
 
 def create_presence(account_name='Guest'):
@@ -22,10 +25,13 @@ def create_presence(account_name='Guest'):
             ACCOUNT_NAME: account_name
         }
     }
+    CLIENT_LOGGER.debug(f'Сформировано {PRESENCE}'
+                        f' сообщение для пользователя {account_name}')
     return out
 
 
 def process_ans(msg):
+    CLIENT_LOGGER.debug(f'Разбор сообщения от сервера : {msg}')
     if RESPONSE in msg:
         if msg[RESPONSE] == 200:
             return '200 : OK'
@@ -42,17 +48,19 @@ def main():
     except IndexError:
         server_address = DEFAULT_IP_ADDRESS
         server_port = DEFAULT_PORT
-
-
+    CLIENT_LOGGER.info(f'Запущен клиент с параметрами: '
+                       f'адрес сервера : {server_address}, порт : {server_port}')
     transport = socket(AF_INET, SOCK_STREAM)
     transport.connect((server_address, server_port))
     msg_to_server = create_presence()
     send_msg(transport, msg_to_server)
     try:
         answer = process_ans(get_msg(transport))
-        print(answer)
-    except (ValueError, JSONDecodeError):
-        print('Не удалось декодировать сообщение сервера.')
+        CLIENT_LOGGER.info(f'Принят ответ от сервера: {answer}')
+    except JSONDecodeError:
+        CLIENT_LOGGER.error(f'Не удалось декодировать Json строку')
+    except ConnectionRefusedError:
+        CLIENT_LOGGER.critical(f'Не удалось подключиться к серверу {server_address}')
 
 
 if __name__ == '__main__':
