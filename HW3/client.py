@@ -69,35 +69,64 @@ def process_ans(msg):
     if RESPONSE in msg:
         if msg[RESPONSE] == 200:
             return '200 : OK'
-        return f'400 : {msg[ERROR]}'
+        elif msg[RESPONSE] == 400:
+            raise f'400 : {msg[ERROR]}'
     raise ValueError
+
+@log
+def arg_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('addr', default=DEFAULT_IP_ADDRESS, nargs='?')
+    parser.add_argument('port', default=DEFAULT_PORT, type=int, nargs='?')
+    parser.add_argument('-m', '--mode', default='listen', nargs='?')
+    namespace = parser.parse_args(argv[1:])
+    server_address = namespace.addr
+    server_port = namespace.port
+    client_mode = namespace.mode
+
+    if not 1023 < server_port < 65536:
+        CLIENT_LOGGER.critical(
+            f'Попытка запуска клиента с неподходящим номером порта: {server_port}. '
+            f'Допустимы адреса с 1024 до 65535. Клиент завершается.')
+        exit(1)
+
+    # Проверим допустим ли выбранный режим работы клиента
+    if client_mode not in ('listen', 'send'):
+        CLIENT_LOGGER.critical(f'Указан недопустимый режим работы {client_mode}, '
+                        f'допустимые режимы: listen , send')
+        exit(1)
+
+    return server_address, server_port, client_mode
 
 
 def main():
+    server_address, server_port, client_mode = arg_parser()
+
+    CLIENT_LOGGER.info(f'Запущен клиент с парамертами: адрес сервера: '
+                    f'{server_address}, порт: {server_port}, режим работы: {client_mode}')
+    # try:
+    #     server_address = argv[1]
+    #     server_port = int(argv[2])
+    #     client_mode = argv[3]
+    #     if server_port < 1024 or server_port > 65535:
+    #         raise ValueError
+    #     if client_mode not in ('listen', 'send'):
+    #         exit(1)
+    # except IndexError:
+    #     server_address = DEFAULT_IP_ADDRESS
+    #     server_port = DEFAULT_PORT
+    #     client_mode = ('-m', '--mode')
+    # CLIENT_LOGGER.info(f'Запущен клиент с параметрами: '
+    #                    f'адрес сервера : {server_address}, порт : {server_port}')
+    # CLIENT_LOGGER.critical(f'Указан недопустимый режим работы {client_mode}, '
+    #                 f'допустимые режимы: listen , send')
     try:
-        server_address = argv[1]
-        server_port = int(argv[2])
-        client_mode = argv[3]
-        if server_port < 1024 or server_port > 65535:
-            raise ValueError
-        if client_mode not in ('listen', 'send'):
-            exit(1)
-    except IndexError:
-        server_address = DEFAULT_IP_ADDRESS
-        server_port = DEFAULT_PORT
-        client_mode = ('-m', '--mode')
-    CLIENT_LOGGER.info(f'Запущен клиент с параметрами: '
-                       f'адрес сервера : {server_address}, порт : {server_port}')
-    CLIENT_LOGGER.critical(f'Указан недопустимый режим работы {client_mode}, '
-                    f'допустимые режимы: listen , send')
-    transport = socket(AF_INET, SOCK_STREAM)
-    transport.connect((server_address, server_port))
-    msg_to_server = create_presence()
-    send_msg(transport, msg_to_server)
-    try:
+        transport = socket(AF_INET, SOCK_STREAM)
+        transport.connect((server_address, server_port))
+        send_msg(transport, create_presence())
         answer = process_ans(get_msg(transport))
         CLIENT_LOGGER.info(f'Принят ответ от сервера: {answer}')
-        exit(1)
+        print('Соединение установлено.')
     except JSONDecodeError:
         CLIENT_LOGGER.error(f'Не удалось декодировать Json строку')
         exit(1)
