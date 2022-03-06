@@ -51,3 +51,8 @@
 2022-02-28 02:26:24,882 DEBUG    Сформировано presence сообщение для пользователя Guest
 2022-02-28 02:26:24,882 DEBUG    Функция create_presence  с параметрами (), {} была вызвана из функции main()
 2022-02-28 02:26:24,882 DEBUG    Функция send_msg  с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 52345), raddr=('127.0.0.1', 7777)>, {'action': 'presence', 'time': 1646004384.8820019, 'user': {'account_name': 'Guest'}}), {} была вызвана из функции main()
+2022-03-06 23:36:42,652 DEBUG    Функция arg_parser  с параметрами (), {} была вызвана из функции main()
+2022-03-06 23:36:42,652 INFO     Запущен клиент с парамертами: адрес сервера: 127.0.0.1, порт: 7777, режим работы: listen
+2022-03-06 23:36:42,653 DEBUG    Сформировано presence сообщение для пользователя listen
+2022-03-06 23:36:42,653 DEBUG    Функция create_presence  с параметрами ('listen',), {} была вызвана из функции main()
+2022-03-06 23:36:42,653 DEBUG    Функция send_msg  с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 50969), raddr=('127.0.0.1', 7777)>, {'action': 'presence', 'time': 1646599002.653343, 'user': {'account_name': 'listen'}}), {} была вызвана из функции main()
